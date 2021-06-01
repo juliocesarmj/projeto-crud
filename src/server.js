@@ -1,7 +1,13 @@
 const express = require('express');
 const path = require('path');
 
+const db = require('./database');
+const routes = require('./routes');
+
 const app = express();
+
+//chama a funcao de conexao de banco de dados
+db.connect();
 
 //setando a engine a ser utilizada no projeto
 app.set('view engine', 'ejs');
@@ -14,13 +20,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //habilita server para receber dados via post(formulário)
 app.use(express.urlencoded({ extended: true }));
 
-//rotas
-app.get('/', (req, res) => {
-  res.render('index', {
-    title: 'CRUD completo - Início',
-  });
-});
-
+app.use('/', routes);
+// 404 page not foud
 app.use((req, res) => {
   res.send('Página não encontrada');
 });
